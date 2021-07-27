@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MyTable from "../Components/MyTable";
 import { getTeacher } from "../Redux/app/action";
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 
 export default function Dashboard() {
   const history = useHistory();
@@ -20,10 +20,16 @@ export default function Dashboard() {
   const handleTeacherClick = (id) => {
     history.push(`/teacher/${id}`);
   };
+  const isAuth = useSelector((state) => state.auth.isAuth);
   useEffect(() => {
     console.log(gender);
     dispatch(getTeacher(token, search, page, sorting, order, gender));
   }, [page, search, page, sorting, order, gender]);
+
+  if (!isAuth) {
+    return <Redirect to="/login" />;
+  }
+
   return (
     <Container style={{ marginTop: 100, textAlign: "left" }}>
       <TextField
